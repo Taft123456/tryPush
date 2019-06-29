@@ -27,22 +27,32 @@ echo ======================================================\n
 echo Running all tests..."\n\n
 
 # Add tests below
-# Test sequence from Wait_Command: A2, A1 => PORTB: 0x01
-test "PINA: 0x04, 0x02 => PORTB: 0x01, state: Door_Unlock"
-set state = Wait_Command
-setPINA 0x04
+# Test sequence from START: A0 && A1 => PORTC: 0x00
+test "PINA: 0x03 => PORTC: 0x00, state: RESET"
+set state = START
+setPINA 0x03
+continue 2
+expectPORTC 0x00
+checkResult
+
+# Test sequence from INIT: A0, A1 => PORTC: 0x00
+test "PINA: 0x01, 0x02 => PORTC: 0x00, state: RESET"
+set state = INIT
+setPINA 0x01
 continue 2
 setPINA 0x02
 continue 2
-expectPORTB 0x01
+expectPORTC 0x00
 checkResult
 
-# Test sequence from Wait_Command: A7 => PORTB: 0x00
-test "PINA: 0x80 => PORTB: 0x00, state: Door_Relock"
-set state = Wait_Command
-setPINA 0x80
+# Test sequence from INIT: A1, A0 => PORTC: 0x00
+test "PINA: 0x02, 0x01 => PORTC: 0x00, state: RESET"
+set state = INIT
+setPINA 0x02
 continue 2
-expectPORTB 0x00
+setPINA 0x01
+continue 2
+expectPORTC 0x00
 checkResult
 
 # Report on how many tests passed/tests ran
